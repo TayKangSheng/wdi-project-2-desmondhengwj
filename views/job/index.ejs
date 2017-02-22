@@ -1,0 +1,20 @@
+<div class="container">
+  <h1 class="page-header">Things to do</h1>
+
+<ul class="list-group">
+  <% jobs.forEach(function (jobItem) { %>
+    <li class="list-group-item">
+      <strong><%= jobItem.title %>: </strong>
+      <%= jobItem.description %>
+      || Completed:
+      <% if (jobItem.completed == true) { %>
+        <span class="label label-success">True</span>
+      <% } else if (jobItem.completed == false) { %>
+        <span class="label label-danger">False</span>
+      <% } %>
+      <a class="pull-right" href=<%= "/job/" + jobItem._id %>>View</a>
+    </li>
+  <% }) %>
+</ul>
+
+</div>
