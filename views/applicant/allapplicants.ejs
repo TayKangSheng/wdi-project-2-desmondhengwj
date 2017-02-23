@@ -1,0 +1,45 @@
+<%# SECOND PART: LISTING ALL APPLICANTS %>
+<div class="row">
+  <h2>All Applicants</h2>
+  <% applicants.forEach(function(applicant) { %>
+    <div class="col-md-4">
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            <%= applicant.name %>
+            <small>(member since <%= applicant.member_since%>)</small>
+          </h3>
+        </div>
+        <div class="panel-body">
+          <br><br>
+          <% if( applicant.status === 'interview') {%>
+            <a
+              class="btn btn-danger"
+              href="/applicants/<%=applicant.id%>?status=interviewed">
+              interviewed
+            </a>
+          <% } else { %>
+            <a
+              class="btn btn-success"
+              href="/applicants/<%=applicant.id%>?status=interview">
+              interview
+            </a>
+          <% }%>
+          <a href="/applicants/<%=applicant.id%>" class="btn btn-primary">
+            Show profile
+          </a>
+          <br><br>
+          <form
+            method="POST"
+            action="/applicants/<%= applicant.id%>?_method=DELETE"
+          >
+            <button class="btn btn-danger" type="submit">
+              Delete applicant
+            </button>
+          </form>
+        </div>
+      </div>
+      <pre><%= applicant %></pre>
+    </div>
+  <% }) %>
+</div>

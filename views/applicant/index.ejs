@@ -1,48 +1,71 @@
-<h1>Application Page</h1>
+<img src="DS Logo.png" alt="My Logo" width="200">
 
-<img src="logo.png" alt="DS Logo" width="100">
+<% include ../partials/flash %>
 
+
+<%# FIRST PART: THE FORM %>
 <form method="post" action="/applicants">
-  <h2>Register now!</h2>
+  <h2>Apply Here</h2>
   <div class="row">
-    <div class="form-group col-md-4">
-      <input type="text" class="form-control" name="applicants[Name]" id="Name" placeholder="Name">
+    <div class="form-group">
+      <input type="text" class="form-control" name="applicants[name]" id="name" placeholder="Full Name as of NRIC">
     </div>
-    <div class="form-group col-md-4">
-      <input type="text" class="form-control" name="applicants[NRIC]" id="NRIC" placeholder="NRIC">
+
+    <div class="form-group">
+      <input type="text" class="form-control" name="applicants[nric]" id="nric" placeholder="NRIC">
     </div>
-    <div class="form-group col-md-4">
-      <input type="text" class="form-control" name="applicants[Contact]" id="Contact" placeholder="Contact">
+
+    <div class="form-group">
+      <input type="text" class="form-control" name="applicants[contact]" id="contact" placeholder="Contact Number">
     </div>
-    <div class="form-group col-md-4">
-      <input type="text" class="form-control" name="applicants[Gender]" id="Gender" placeholder="(Male/Female)">
+
+    <div class="form-group">
+      <input type="text" class="form-control" name="applicants[gender]" id="gender" placeholder="Gender (M/F)">
     </div>
-    <div class="form-group col-md-4">
-      <input type="text" class="form-control" name="applicants[Email]" id="Email" placeholder="Email">
+
+    <div class="form-group">
+      <input type="date" class="form-control" name="applicants[dob]" id="dob">
     </div>
-    <div class="form-group col-md-4">
-      <input type="date" class="form-control" name="applicants[dob]" id="Date of Birth">
+
+    <div class="form-group">
+      <input type="text" class="form-control" name="applicants[address]" id="address" placeholder="Address as per NRIC">
     </div>
-    <div class="form-group col-md-4">
-      <input type="text" class="form-control" name="applicants[Address]" id="Address" placeholder="Address">
+
+    <div class="form-group">
+      <input type="text" class="form-control" name="applicants[bankname]" id="bankname" placeholder="Bank Name">
     </div>
-    <div class="form-group col-md-4">
-      <input type="text" class="form-control" name="applicants[Bank Name]" id="Bank Name" placeholder="Bank Name">
+
+    <div class="form-group">
+      <input type="text" class="form-control" name="applicants[bankaccount]" id="bankaccount" placeholder="Bank Account Number">
     </div>
-    <div class="form-group col-md-4">
-      <input type="text" class="form-control" name="applicants[Bank Account Number]" id="Bank Account Number" placeholder="Bank Account Number">
+
+    <div class="form-group">
+      <input type="text" class="form-control" name="applicants[nameOfEmergencyContact]" id="nameOfEmergencyContact" placeholder="Name of Emergency Contact">
     </div>
-    <div class="form-group col-md-4">
-      <input type="text" class="form-control" name="applicants[Emergency Contact Name]" id="Emergency Contact Name" placeholder="Emergency Contact Name">
+
+    <div class="form-group">
+      <input type="text" class="form-control" name="applicants[relationshipOfEmergencyContact]" id="relationshipOfEmergencyContact" placeholder="Relationship to Emergency Contact">
     </div>
-    <div class="form-group col-md-4">
-      <input type="text" class="form-control" name="applicants[Relationship of Emergency Contact]" id="Relationship of Emergency Contact" placeholder="Relationship of Emergency Contact">
+
+    <div class="form-group">
+      <input type="text" class="form-control" name="applicants[contactOfEmergencyContact]" id="contactOfEmergencyContact" placeholder="Contact Number of Emergency Contact">
     </div>
-    <div class="form-group col-md-4">
-      <input type="text" class="form-control" name="applicants[Emergency Contact Contact Number]" id="Emergency Contact Contact Number" placeholder="Emergency Contact Contact Number">
-    </div>
-    <div class="form-group col-md-4">
-      <button type="submit" class="btn btn-success btn-block">Submit your Application</button>
+
+    <div class="form-group">
+    <label for="exampleInputFile">Please upload the front of your NRIC</label>
+    <input type="file" id="exampleInputFile">
+    <p class="help-block"></p>
+  </div>
+
+  <div class="form-group">
+  <label for="exampleInputFile">Please upload the back of your NRIC</label>
+  <input type="file" id="exampleInputFile">
+  <p class="help-block"></p>
+</div>
+
+
+    <div class="form-group">
+      <button type="submit" class="btn btn-success btn-block">Submit</button>
     </div>
   </div>
 </form>

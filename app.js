@@ -1,128 +1,161 @@
 require('dotenv').config({ silent: true })
-const path = require('path')
-const job = require('./routes/job_router')
-const ejsLayouts = require('express-ejs-layouts')
-// Filesystem
-const fs = require('fs')
-// Express
-const express = require('express')
-const app = express()
-const port = 3000
-// Mongoose connection
-const mongoose = require('mongoose')
-// Importing of models
-const Applicant = require('./models/applicant')
-const Job = require('./models/job')
-// Express EJS Layouts
-const expressLayouts = require('express-ejs-layouts')
-// For Flash data
-const session = require('express-session')
-const flash = require('connect-flash')
-const cookieParser = require('cookie-parser')
-const MongoStore = require('connect-mongo')(session)
-const bodyParser = require('body-parser')
-const methodOverride = require('method-override')
+var express = require('express')
+var path = require('path')
+var debug = require('debug')
+var logger = require('morgan')
+var mongoose = require('mongoose')
+var bodyParser = require('body-parser')
+var expressLayouts = require('express-ejs-layouts')
+var app = express()
+var router = express.Router()
+var methodOverride = require('method-override')
+var passport = require('passport')
 
-// Mongoose
-mongoose.Promise = global.Promise
-mongoose.connect('mongodb://desmondhengwj:hengwjd123@ds157499.mlab.com:57499/wdiproject2')
+// all you need for flash data
+var session = require('express-session')
+var flash = require('connect-flash')
+var cookieParser = require('cookie-parser')
+var MongoStore = require('connect-mongo')(session)
 
-// app.use(cookieParser(process.env.SESSION_SECRET))
-// app.use(session({
-//   secret: process.env.SESSION_SECRET,
-//   cookie: { maxAge: 600000000000000 },
-//   resave: false,
-//   saveUninitialized: true,
-//   store: new MongoStore({
-//     url: process.env.MONGODB_URI,
-//     autoReconnect: true
-//   })
-// }))
+var mongoose = require('mongoose')
+mongoose.connect(process.env.MONGODB_URI)
 
-// app.use(passport.initialize())
-// app.use(passport.session())
-// require('./config/passportConfig')(passport)
+app.use(express.static('public'))
+
+app.use(cookieParser(process.env.SESSION_SECRET))
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  cookie: { maxAge: 60000 },
+  resave: false,
+  saveUninitialized: true,
+  store: new MongoStore({
+    url: process.env.MONGODB_URI,
+    autoReconnect: true
+  })
+}))
+
+// initialize passport into your application
+app.use(passport.initialize())
+app.use(passport.session())
+require('./config/passportConfig')(passport)
 
 app.use(flash())
 
-
 app.use(methodOverride('_method'))
-app.use('/job', job)
+app.use(logger('dev'))
+
+app.use(bodyParser.urlencoded({ extended: true }))
+// app.set('views', path.join(__dirname, 'views'))
 app.use(expressLayouts)
-app.use(ejsLayouts)
-// Static
-app.use(express.static(path.join(__dirname, 'public')))
-// bodyParser
+// app.engine('ejs', require('ejs').renderFile)
 app.set('view engine', 'ejs')
-app.use(bodyParser.urlencoded({extended: false}))
 
-// Details of New Applicant
-const newApplicant = new Applicant({
-  name: 'Lim Han Song',
-  nric: 'S1234567D',
-  contact: '91594259',
-  gender: 'Male',
-  email: 'hansong@dsrecruitment.sg',
-  dob: '1st January 1990',
-  address: '371 Sengkang Drive',
-  bankname: 'POSB',
-  bankaccount: '12345678',
-  nameOfEmergencyContact: 'Desmond Heng',
-  relationshipOfEmergency: 'Friend',
-  contactOfEmergency: '91594259'
+app.get('/test', function (req, res) {
+  console.log(process.env); res.send('secret is ' + process.env.SESSION_SECRET)
 })
 
-// Details of New Job
-const newJob = new Job({
-  location: 'Mandarin Oriental',
-  date: '1st March 2017',
-  startTime: '10am',
-  endTime: '6pm'
-})
+// routes to login and signup
+const Auth = require('./routes/authRoutes')
+app.use('/', Auth)
 
-// Save new Application into the database
-newApplicant.save(function (err) {
-  if (err) {
-    console.log(err)
-    return
-  }
-  console.log('Applicant Created!')
-})
+const Applicant = require('./models/applicant')
 
-// Save new Job into the database
-newJob.save(function (err) {
-  if (err) {
-    console.log(err)
-    return
-  }
-  console.log('Job Created!')
-})
-
-// Homepage
 app.get('/', function (req, res) {
-  res.send('Welcome to Homepage')
+  res.redirect('/login')
 })
 
-// about
-app.get('/about', function (req, res) {
-  res.send('Welcome to About Page')
+app.get('/applicants', function (req, res) {
+  Applicant.find({}, function (err, output) {
+    res.render('applicants/index', {
+      applicants: output,
+      flash: req.flash('flash')[0]
+    })
+  })
 })
 
-// services
-app.get('/services', function (req, res) {
-  res.send('Welcome to Services Page')
+app.get('/allapplicants', function (req, res) {
+  Applicant.find({}, function (err, output) {
+    res.render('applicants/allapplicants', {
+      applicants: output,
+      flash: req.flash('flash')[0]
+    })
+  })
 })
 
-// apply
-app.get('/apply', function (req, res) {
-  res.send('Welcome to Application Page')
+app.get('/applicants/:id', function (req, res, next) {
+  if (req.query.status) {
+    return next('route')
+  }
+
+  Applicant.findById(req.params.id, function (err, output) {
+    if (err) return next(err)
+    res.render('applicants/show', {
+      applicants: output
+    })
+  })
 })
 
-// FAQ
-app.get('/FAQ', function (req, res) {
-  res.send('Welcome to FAQ Page')
+app.get('/applicants/:id', function (req, res, next) {
+  Applicant.findByIdAndUpdate(req.params.id, {
+    status: req.query.status
+  }, function (err, output) {
+    if (err) return next(err)
+
+    res.redirect('/applicants')
+  })
 })
 
+app.post('/applicants', function (req, res, next) {
+  Applicant.create(req.body.applicants, function (err, output) {
+    if (err) {
+      if (err.name === 'ValidationError') {
+        let errMessages = []
+        for (field in err.errors) {
+          errMessages.push(err.errors[field].message)
+        }
+
+        console.log(errMessages)
+
+        req.flash('flash', {
+          type: 'danger',
+          message: errMessages
+        })
+        res.redirect('/applicants')
+      }
+
+      return next(err)
+    }
+    req.flash('flash', {
+      type: 'success',
+      message: 'Applicant Created' + output.name
+    })
+    res.redirect('/applicants')
+  })
+})
+app.delete('/applicants/:id', function (req, res, next) {
+  Applicant.findByIdAndRemove(req.params.id, function (err, output) {
+    if (err) return next(err)
+    req.flash('flash', {
+      type: 'warning',
+      message: 'Applicant Deleted'
+    })
+    res.redirect('/applicants')
+  })
+})
+
+// development error handler
+// will print stacktrace
+if (app.get('env') === 'development') {
+  app.use(function (err, req, res, next) {
+    res.status(err.status || 500)
+    res.render('error', {
+      message: err.message,
+      error: err
+    })
+  })
+}
+
+const port = 4001
 app.listen(port, function () {
-  console.log('Project is running!!')
+  console.log('DS App is running on ' + port)
 })

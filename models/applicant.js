@@ -2,57 +2,57 @@ var mongoose = require('mongoose')
 var ApplicantSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, '']
+    required: [true, 'Please key in your Name.']
   },
   nric: {
     type: String,
-    required: [true, '']
+    required: [true, 'Please key in your NRIC.']
   },
   contact: {
-    type: String,
-    required: [true, '']
+    type: Number,
+    required: [true, 'Please key in your Number.']
   },
   gender: {
     type: String,
-    required: [true, '']
-  },
-  email: {
-    type: String,
-    required: [true, '']
+    required: [true, 'Please key in your Gender.']
   },
   dob: {
-    type: String,
-    required: [true, '']
+    type: Date, default: Date.now
   },
   address: {
     type: String,
-    required: [true, '']
+    required: [true, 'Please key in your Full Address.']
   },
   bankname: {
     type: String,
-    required: [true, '']
+    required: [true, 'Please key in your Bank Name.']
   },
   bankaccount: {
-    type: String,
-    required: [true, '']
+    type: Number,
+    required: [true, 'Please key in your Bank Account.']
   },
   nameOfEmergencyContact: {
     type: String,
-    required: [true, '']
+    required: [true, 'Please key in the name of your Emergency Contact.']
   },
-  relationshipOfEmergency: {
+  relationshipOfEmergencyContact: {
     type: String,
-    required: [true, '']
+    required: [true, 'Please key in the relationship with your Emergency contactOfEmergency']
   },
-  contactOfEmergency: {
+  contactOfEmergencyContact: {
+    type: Number,
+    required: [true, 'Please key in the contact number of your Emergency Contact']
+  },
+  status: {
     type: String,
-    required: [true, '']
+    enum: ['Interviewed', 'Interview'],
+    default: 'Interview'
   }
 })
 
-ApplicantSchema.methods.sayHello = function () {
-  return 'Hi' + this.name
-}
+ApplicantSchema.virtual('member_since').get(function () {
+  return this.dob.getFullYear()
+})
 
 var Applicant = mongoose.model('Applicant', ApplicantSchema)
 
