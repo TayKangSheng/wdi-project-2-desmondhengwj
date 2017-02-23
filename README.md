@@ -4,7 +4,7 @@ DS Recruitment - Jobs on Demand
 
 ## Live Version
 
-https://serene-everglades-56568.herokuapp.com/about
+https://serene-everglades-56568.herokuapp.com/
 
 ## Things to work on
 
