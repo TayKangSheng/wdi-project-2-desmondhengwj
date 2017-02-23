@@ -4,7 +4,7 @@
   "description": "This is the starter code for WDI projects. Please update this README file with information specific to your project. Replace this paragraph for instance, with a short description of your project. Then update the sections below. Refer to your project specificaion for instructions on how to submit your projects.",
   "main": "app.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,7 +18,6 @@
   },
   "homepage": "https://github.com/wdi-sg/wdi-project-2-desmondhengwj#readme",
   "dependencies": {
-    "assert": "^1.4.1",
     "bcrypt": "^1.0.2",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.16.1",
@@ -37,7 +36,6 @@
     "mongod": "^2.0.0",
     "mongoose": "^4.8.4",
     "morgan": "^1.8.1",
-    "node": "0.0.0",
     "nodemon": "^1.11.0",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
