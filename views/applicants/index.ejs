@@ -1,11 +1,10 @@
-<img src="DS Logo.png" alt="My Logo" width="200">
+<h1>Application Form</h1>
+<br>
 
 <% include ../partials/flash %>
 
-
 <%# FIRST PART: THE FORM %>
 <form method="post" action="/applicants">
-  <h2>Apply Here</h2>
   <div class="row">
     <div class="form-group">
       <input type="text" class="form-control" name="applicants[name]" id="name" placeholder="Full Name as of NRIC">
@@ -68,4 +67,7 @@
       <button type="submit" class="btn btn-success btn-block">Submit</button>
     </div>
   </div>
+
+
+
 </form>

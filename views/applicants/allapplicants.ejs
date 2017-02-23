@@ -2,27 +2,26 @@
 <div class="row">
   <h2>All Applicants</h2>
   <% applicants.forEach(function(applicant) { %>
-    <div class="col-md-4">
+    <div class="dropdown">
       <div class="panel panel-info">
         <div class="panel-heading">
           <h3 class="panel-title">
             <%= applicant.name %>
-            <small>(member since <%= applicant.member_since%>)</small>
           </h3>
         </div>
         <div class="panel-body">
           <br><br>
-          <% if( applicant.status === 'interview') {%>
+          <% if( applicant.status === 'Interview') {%>
             <a
-              class="btn btn-danger"
-              href="/applicants/<%=applicant.id%>?status=interviewed">
-              interviewed
+              class="btn btn-success"
+              href="/applicants/<%=applicant.id%>?status=Interviewed">
+              Interview
             </a>
           <% } else { %>
             <a
-              class="btn btn-success"
-              href="/applicants/<%=applicant.id%>?status=interview">
-              interview
+              class="btn btn-danger"
+              href="/applicants/<%=applicant.id%>?status=Interview">
+              Interviewed
             </a>
           <% }%>
           <a href="/applicants/<%=applicant.id%>" class="btn btn-primary">
@@ -34,7 +33,7 @@
             action="/applicants/<%= applicant.id%>?_method=DELETE"
           >
             <button class="btn btn-danger" type="submit">
-              Delete applicant
+              Delete Applicant
             </button>
           </form>
         </div>

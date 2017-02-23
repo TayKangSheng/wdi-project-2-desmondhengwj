@@ -1,31 +1,30 @@
 require('dotenv').config({ silent: true })
-var express = require('express')
-var path = require('path')
-var debug = require('debug')
-var logger = require('morgan')
-var mongoose = require('mongoose')
-var bodyParser = require('body-parser')
-var expressLayouts = require('express-ejs-layouts')
-var app = express()
-var router = express.Router()
-var methodOverride = require('method-override')
-var passport = require('passport')
+const port = 5000
+const express = require('express')
+const path = require('path')
+const debug = require('debug')
+const logger = require('morgan')
+const mongoose = require('mongoose')
+const bodyParser = require('body-parser')
+const expressLayouts = require('express-ejs-layouts')
+const app = express()
+const router = express.Router()
+const methodOverride = require('method-override')
+const passport = require('passport')
 
 // all you need for flash data
-var session = require('express-session')
-var flash = require('connect-flash')
-var cookieParser = require('cookie-parser')
-var MongoStore = require('connect-mongo')(session)
+const session = require('express-session')
+const flash = require('connect-flash')
+const cookieParser = require('cookie-parser')
+const MongoStore = require('connect-mongo')(session)
 
-var mongoose = require('mongoose')
 mongoose.connect(process.env.MONGODB_URI)
-
 app.use(express.static('public'))
 
 app.use(cookieParser(process.env.SESSION_SECRET))
 app.use(session({
   secret: process.env.SESSION_SECRET,
-  cookie: { maxAge: 60000 },
+  cookie: { maxAge: 60000000 },
   resave: false,
   saveUninitialized: true,
   store: new MongoStore({
@@ -50,23 +49,22 @@ app.use(expressLayouts)
 // app.engine('ejs', require('ejs').renderFile)
 app.set('view engine', 'ejs')
 
-app.get('/test', function (req, res) {
-  console.log(process.env); res.send('secret is ' + process.env.SESSION_SECRET)
-})
-
-// routes to login and signup
-const Auth = require('./routes/authRoutes')
+const Auth = require('./routes/user_router')
 app.use('/', Auth)
 
 const Applicant = require('./models/applicant')
 
 app.get('/', function (req, res) {
-  res.redirect('/login')
+  res.render('home')
+})
+
+app.get('/about', function (req, res) {
+  res.render('about')
 })
 
 app.get('/applicants', function (req, res) {
   Applicant.find({}, function (err, output) {
-    res.render('applicants/index', {
+    res.render('applicants', {
       applicants: output,
       flash: req.flash('flash')[0]
     })
@@ -101,7 +99,7 @@ app.get('/applicants/:id', function (req, res, next) {
   }, function (err, output) {
     if (err) return next(err)
 
-    res.redirect('/applicants')
+    res.redirect('/allapplicants')
   })
 })
 
@@ -127,7 +125,7 @@ app.post('/applicants', function (req, res, next) {
     }
     req.flash('flash', {
       type: 'success',
-      message: 'Applicant Created' + output.name
+      message: 'Your application is successful!'
     })
     res.redirect('/applicants')
   })
@@ -139,7 +137,7 @@ app.delete('/applicants/:id', function (req, res, next) {
       type: 'warning',
       message: 'Applicant Deleted'
     })
-    res.redirect('/applicants')
+    res.redirect('/allapplicants')
   })
 })
 
@@ -155,7 +153,6 @@ if (app.get('env') === 'development') {
   })
 }
 
-const port = 4001
 app.listen(port, function () {
   console.log('DS App is running on ' + port)
 })

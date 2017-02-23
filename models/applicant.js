@@ -45,7 +45,7 @@ var ApplicantSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['Interviewed', 'Interview'],
+    enum: ['Interview', 'Interviewed'],
     default: 'Interview'
   }
 })
