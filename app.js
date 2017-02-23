@@ -11,6 +11,7 @@ const app = express()
 const router = express.Router()
 const methodOverride = require('method-override')
 const passport = require('passport')
+const morgan = require('morgan')
 
 // all you need for flash data
 const session = require('express-session')
@@ -20,6 +21,7 @@ const MongoStore = require('connect-mongo')(session)
 
 mongoose.connect(process.env.MONGODB_URI)
 app.use(express.static('public'))
+app.use(morgan('dev'))
 
 app.use(cookieParser(process.env.SESSION_SECRET))
 app.use(session({
@@ -39,15 +41,61 @@ app.use(passport.session())
 require('./config/passportConfig')(passport)
 
 app.use(flash())
-
 app.use(methodOverride('_method'))
 app.use(logger('dev'))
-
 app.use(bodyParser.urlencoded({ extended: true }))
-// app.set('views', path.join(__dirname, 'views'))
 app.use(expressLayouts)
-// app.engine('ejs', require('ejs').renderFile)
+// this middleware will allow us to use the current user in the layout
+app.use(function (req, res, next) {
+  global.user = req.user
+  next()
+})
+
+function authenticatedUser (req, res, next) {
+    // if the user is authenticated, then we continue the execution
+  if (req.isAuthenticated()) {
+    return next()
+  }
+
+    // otherwise the request is always redirected to the home page
+  res.redirect('/')
+}
+
+app.get('/login', function (req, res) {
+  res.render('login.ejs', { message: req.flash('loginMessage') })
+})
+
+// here we delegate the authentication logic to passport, then there is only 2 options for this specific route, either a valid or invalid login, passport will handle all the logic behind the scene and redirect to the given paths
+app.post('/login', passport.authenticate('local-login', {
+  successRedirect: '/profile',
+  failureRedirect: '/login',
+  failureFlash: true
+}))
+
+app.get('/logout', function (req, res) {
+  req.logout()
+  res.redirect('/')
+})
+
+app.get('/signup', function (req, res) {
+  res.render('signup.ejs', { message: req.flash('signupMessage') })
+})
+
+app.post('/signup', passport.authenticate('local-signup', {
+  successRedirect: '/profile',
+  failureRedirect: '/signup',
+  failureFlash: true
+}))
+
+// Now we can ensure that a user is logged in when accessing a route by using our custom made function authenticatedUser, if there is no authenticated user, then the request will be redirected to the homepage
+app.get('/profile', authenticatedUser, function (req, res) {
+  res.render('profile.ejs', {
+    user: req.user
+  })
+})
+
 app.set('view engine', 'ejs')
+app.set('views', './views')
 
 const Auth = require('./routes/user_router')
 app.use('/', Auth)
