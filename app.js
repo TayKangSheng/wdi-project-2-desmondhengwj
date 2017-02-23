@@ -1,5 +1,5 @@
 require('dotenv').config({ silent: true })
-const port = 5000
+const port = process.env.PORT || 5000
 const express = require('express')
 const path = require('path')
 const debug = require('debug')
@@ -12,8 +12,6 @@ const router = express.Router()
 const methodOverride = require('method-override')
 const passport = require('passport')
 const morgan = require('morgan')
-
-// all you need for flash data
 const session = require('express-session')
 const flash = require('connect-flash')
 const cookieParser = require('cookie-parser')
@@ -39,14 +37,12 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 require('./config/passportConfig')(passport)
-
 app.use(flash())
 app.use(methodOverride('_method'))
 app.use(logger('dev'))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(expressLayouts)
-// this middleware will allow us to use the current user in the layout
-app.use(function (req, res, next) {
+app.use(function (req, res, next) { // this middleware will allow us to use the current user in the layout
   global.user = req.user
   next()
 })
