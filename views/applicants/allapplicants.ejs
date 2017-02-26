@@ -6,11 +6,11 @@
       <div class="panel panel-info">
         <div class="panel-heading">
           <h3 class="panel-title">
-            <%= applicant.name %>
+            <%= applicant.name %> <br>
+            <%= applicant.contact %>
           </h3>
         </div>
         <div class="panel-body">
-          <br><br>
           <% if( applicant.status === 'Interview') {%>
             <a
               class="btn btn-success"
@@ -24,10 +24,8 @@
               Interviewed
             </a>
           <% }%>
-          <a href="/applicants/<%=applicant.id%>" class="btn btn-primary">
-            Show profile
-          </a>
           <br><br>
+          <pre><%= applicant %></pre>
           <form
             method="POST"
             action="/applicants/<%= applicant.id%>?_method=DELETE"
@@ -38,7 +36,6 @@
           </form>
         </div>
       </div>
-      <pre><%= applicant %></pre>
     </div>
   <% }) %>
 </div>

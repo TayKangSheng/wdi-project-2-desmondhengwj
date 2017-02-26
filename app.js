@@ -1,8 +1,7 @@
 require('dotenv').config({ silent: true })
-const port = process.env.PORT || 5000
+const port = process.env.PORT || 3000
 const express = require('express')
 const path = require('path')
-const debug = require('debug')
 const logger = require('morgan')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
@@ -52,7 +51,6 @@ function authenticatedUser (req, res, next) {
   if (req.isAuthenticated()) {
     return next()
   }
-
     // otherwise the request is always redirected to the home page
   res.redirect('/')
 }
@@ -61,7 +59,6 @@ app.get('/login', function (req, res) {
   res.render('login.ejs', { message: req.flash('loginMessage') })
 })
 
-// here we delegate the authentication logic to passport, then there is only 2 options for this specific route, either a valid or invalid login, passport will handle all the logic behind the scene and redirect to the given paths
 app.post('/login', passport.authenticate('local-login', {
   successRedirect: '/profile',
   failureRedirect: '/login',
@@ -73,15 +70,15 @@ app.get('/logout', function (req, res) {
   res.redirect('/')
 })
 
-app.get('/signup', function (req, res) {
-  res.render('signup.ejs', { message: req.flash('signupMessage') })
-})
-
-app.post('/signup', passport.authenticate('local-signup', {
-  successRedirect: '/profile',
-  failureRedirect: '/signup',
-  failureFlash: true
-}))
+// app.get('/signup', function (req, res) {
+//   res.render('signup.ejs', { message: req.flash('signupMessage') })
+// })
+//
+// app.post('/signup', passport.authenticate('local-signup', {
+//   successRedirect: '/profile',
+//   failureRedirect: '/signup',
+//   failureFlash: true
+// }))
 
 // Now we can ensure that a user is logged in when accessing a route by using our custom made function authenticatedUser, if there is no authenticated user, then the request will be redirected to the homepage
 app.get('/profile', authenticatedUser, function (req, res) {
@@ -115,7 +112,7 @@ app.get('/applicants', function (req, res) {
   })
 })
 
-app.get('/allapplicants', function (req, res) {
+app.get('/allapplicants', authenticatedUser, function (req, res) {
   Applicant.find({}, function (err, output) {
     res.render('applicants/allapplicants', {
       applicants: output,
@@ -124,7 +121,7 @@ app.get('/allapplicants', function (req, res) {
   })
 })
 
-app.get('/applicants/:id', function (req, res, next) {
+app.get('/applicants/:id', authenticatedUser, function (req, res, next) {
   if (req.query.status) {
     return next('route')
   }
@@ -137,7 +134,7 @@ app.get('/applicants/:id', function (req, res, next) {
   })
 })
 
-app.get('/applicants/:id', function (req, res, next) {
+app.get('/applicants/:id', authenticatedUser, function (req, res, next) {
   Applicant.findByIdAndUpdate(req.params.id, {
     status: req.query.status
   }, function (err, output) {
