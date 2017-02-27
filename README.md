@@ -18,15 +18,15 @@ https://www.dsrecruitment.co/
 
 ## Built With
 
-* Node.js
-* Express.js
-* mLab (MongoDB Hosting)
-* Heroku Cloud Server
-* ORM: Mongoose
-* Embedded Javscript (ejs)
 * Bootstrap
+* Express.js
+* Embedded Javscript (ejs)
+* Heroku Cloud Server
 * HTML5
 * Javascript
+* mLab (MongoDB Hosting)
+* ORM: Mongoose
+* Node.js
 
 ## Authors
 
