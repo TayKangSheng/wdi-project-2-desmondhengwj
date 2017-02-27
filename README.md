@@ -2,13 +2,18 @@
 
 DS Recruitment - Jobs on Demand
 
-## Live Version
+## Wanted to do 
 
-https://frozen-peak-54762.herokuapp.com/
+https://jod.com.sg/
+https://www.ushift.com.sg/
 
-## Motivated By
+## Gave up and tried to do 
 
 https://www.dsrecruitment.co/
+
+## But ended up with this
+
+https://frozen-peak-54762.herokuapp.com/
 
 
 ## Things to work on
