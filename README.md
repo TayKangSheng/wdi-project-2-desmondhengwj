@@ -13,7 +13,8 @@ https://www.dsrecruitment.co/
 
 ## Things to work on
 
-<br> 1) Uploading the files does not record down in Robomongo
+<br> 1) Make cloundinary work
+<br> 2) Hide the login when log-in.
 
 ## Built With
 
