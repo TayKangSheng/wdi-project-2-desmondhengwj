@@ -15,6 +15,7 @@ https://www.dsrecruitment.co/
 
 <br> 1) Make cloundinary work
 <br> 2) Hide the login when log-in.
+<br> 3) There's a need for a better structure.
 
 ## Built With
 
